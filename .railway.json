@@ -1,5 +1,8 @@
 {
   "build": {
-    "command": "yarn install"
+    "command": "yarn install",
+    "environment": {
+      "YARN_CHECK_CACHE": "false"
+    }
   }
 }
