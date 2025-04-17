@@ -6,17 +6,24 @@ WORKDIR /app
 # Copia tudo
 COPY . .
 
-# Instala dependências com Yarn 3 (usando workspaces)
-RUN corepack enable && yarn install
+# Ativa o corepack para yarn moderno
+RUN corepack enable
 
-# Builda o projeto (opcional, se houver build)
-RUN yarn build || echo "No build script"
+# Vai para o serviço da API
+WORKDIR /app/services/api
+
+# Instala as dependências da API
+RUN yarn install
 
 # Etapa 2: runtime
 FROM node:20-alpine
 
 WORKDIR /app
 
-COPY --from=build /app .
+# Copia só a API pronta
+COPY --from=build /app/services/api .
+
+ENV PORT=3000
+EXPOSE 3000
 
 CMD ["yarn", "start"]
