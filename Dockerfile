@@ -1,4 +1,4 @@
-# Usa a imagem oficial do Node.js (versão 20 para compatibilidade)
+# Usa a imagem oficial do Node.js
 FROM node:20
 
 # Define o diretório de trabalho
@@ -11,11 +11,14 @@ COPY .yarn ./.yarn
 # Instala as dependências
 RUN yarn install
 
-# Copia o restante do projeto
-COPY . .
+# Copia apenas o workspace landlord
+COPY webapps/landlord ./webapps/landlord
 
-# Build do projeto (se necessário, ajustaremos depois)
-RUN yarn build
+# Build do landlord
+RUN yarn workspace @microrealestate/landlord run build
 
-# Comando para iniciar o projeto
-CMD ["yarn", "start"]
+# Expõe a porta 3000
+EXPOSE 3000
+
+# Inicia o landlord
+CMD ["yarn", "workspace", "@microrealestate/landlord", "run", "start"]
